@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Live Stream</title>
+	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+	<link href="/node_modules/video.js/dist/video-js.css" rel="stylesheet">
+	<link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+	<h1>T-Stream</h1>
+
+	<div class="main-content">
+		<div class="live-streams-sidebar">
+			<h2>About Us</h2>
+			<ul>
+				<p>Welcome to our personalized streaming platform! We offer a custom-built website tailored to your unique streaming needs, allowing you to host all your live streams on your own server. With us, you can easily manage your content without worrying about copyright issues. From concept to creation, we bring your vision to life, providing a seamless streaming experience designed specifically for you.</p>
+			</ul>
+			<br>
+			<h2>Contact Us</h2>
+			<ul>
+				<p>If you have any questions or need further information, feel free to reach out to us. We're here to help!</p>
+				<br>
+				<p class="contact-info">Email: <a href="mailto:support@stream.com">support@stream.com</a></p>
+				<p class="contact-info">Phone: <a href="+254700000000">+254-7000-0000</a></p>
+			</ul>
+		</div>
+
+		<div class="video-area">
+			<div class="video-container">
+				<video id="live-stream" class="video-js vjs-default-skin" controls></video>
+			</div>
+
+			<div class="comment-section">
+				<button id="view-comments-btn">Comments</button>
+
+				<div id="comments-box" style="display: none;">
+					<textarea id="comment-input" placeholder="Add a comment..." rows="3"></textarea>
+					<button id="add-comment-btn">Add Comment</button>
+					<div id="comments-list"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="/node_modules/video.js/dist/video.js"></script>
+
+	<script>
+		if (Hls.isSupported()) {
+			var video = document.getElementById('live-stream');
+			var hls = new Hls();
+
+			var streamUrl = '/hls/mystream.m3u8';
+
+			hls.loadSource(streamUrl);
+			hls.attachMedia(video);
+
+			hls.on(Hls.Events.MANIFEST_PARSED, function () {
+				video.play();
+			});
+		} else {
+			console.error('HLS.js is not supported in this browser.');
+			alert('Your browser does not support HLS.js.');
+		}
+
+		document.getElementById('view-comments-btn').addEventListener('click', function () {
+			var commentsBox = document.getElementById('comments-box');
+			commentsBox.style.display = commentsBox.style.display === 'none' ? 'block' : 'none';
+		});
+
+		document.getElementById('add-comment-btn').addEventListener('click', function () {
+			var commentInput = document.getElementById('comment-input');
+			var commentText = commentInput.value.trim();
+
+			if (commentText !== '') {
+				var commentList = document.getElementById('comments-list');
+				var newComment = document.createElement('div');
+				newComment.classList.add('comment');
+				newComment.textContent = commentText;
+				commentList.appendChild(newComment);
+
+				commentInput.value = '';
+			}
+		});
+	</script>
+</body>
+</html>
+
